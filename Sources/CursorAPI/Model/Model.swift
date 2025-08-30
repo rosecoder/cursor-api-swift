@@ -9,7 +9,13 @@ public struct Model: Sendable {
   }
 }
 
-extension Model: Encodable {
+extension Model: Codable {
+
+  public init(from decoder: Decoder) throws {
+    let container = try decoder.singleValueContainer()
+    let value = try container.decode(String.self)
+    self.init(rawValue: value)
+  }
 
   public func encode(to encoder: Encoder) throws {
     var container = encoder.singleValueContainer()
