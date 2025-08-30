@@ -52,9 +52,11 @@ public final class CursorAPI: Sendable, Service {
     method: HTTPMethod,
     path: String,
     queryItems: [URLQueryItem] = [],
-    body: Body = .none
+    body: Body = .none,
+    configuration: Configuration?
   ) async throws -> ReturnElement {
-    try await withSpan(
+    let configuration = configuration ?? self.configuration
+    return try await withSpan(
       "cursor-" + path,
       ofKind: .client
     ) { span in
@@ -65,7 +67,8 @@ public final class CursorAPI: Sendable, Service {
         method: method,
         path: path,
         queryItems: queryItems,
-        body: body
+        body: body,
+        configuration: configuration
       )
       span.attributes["/http/status_code"] = String(response.status.code)
 
@@ -77,7 +80,8 @@ public final class CursorAPI: Sendable, Service {
     method: HTTPMethod,
     path: String,
     queryItems: [URLQueryItem],
-    body: Body
+    body: Body,
+    configuration: Configuration
   ) async throws -> HTTPClientResponse {
     var urlComponents = URLComponents(string: configuration.endpoint + path)!
     urlComponents.queryItems = queryItems

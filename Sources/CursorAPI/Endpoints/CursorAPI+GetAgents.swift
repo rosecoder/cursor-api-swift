@@ -2,7 +2,11 @@ import Foundation
 
 extension CursorAPI {
 
-  public func getAgents(limit: UInt = 20, cursor: PaginationCursor? = nil) async throws
+  public func getAgents(
+    limit: UInt = 20,
+    cursor: PaginationCursor? = nil,
+    configuration: Configuration? = nil
+  ) async throws
     -> GetAgentsResult
   {
     try await execute(
@@ -12,7 +16,8 @@ extension CursorAPI {
         URLQueryItem(name: "limit", value: String(limit)),
         cursor.flatMap { URLQueryItem(name: "cursor", value: $0.rawValue) },
       ]
-      .compactMap { $0 }
+      .compactMap { $0 },
+      configuration: configuration
     )
   }
 }

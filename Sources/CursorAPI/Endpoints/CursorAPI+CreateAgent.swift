@@ -7,7 +7,8 @@ extension CursorAPI {
     source: Agent.Source,
     model: Model? = nil,
     target: CreateAgentTarget? = nil,
-    webhook: Webhook? = nil
+    webhook: Webhook? = nil,
+    configuration: Configuration? = nil
   ) async throws
     -> Agent
   {
@@ -22,7 +23,8 @@ extension CursorAPI {
           target: target,
           webhook: webhook
         )
-      )
+      ),
+      configuration: configuration
     )
   }
 }
