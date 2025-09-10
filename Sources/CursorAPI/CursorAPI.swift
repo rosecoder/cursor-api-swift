@@ -12,14 +12,38 @@ public final class CursorAPI: Sendable, Service {
   private let httpClient = HTTPClient()
   private let configuration: Configuration
 
-  private let jsonEncoder: JSONEncoder = {
+  private static let jsonEncoder: JSONEncoder = {
     let encoder = JSONEncoder()
     encoder.dateEncodingStrategy = .iso8601
     return encoder
   }()
-  private let jsonDecoder: JSONDecoder = {
+
+  static let jsonDecoder: JSONDecoder = {
     let decoder = JSONDecoder()
-    decoder.dateDecodingStrategy = .iso8601
+    // Linux is stricter about ISO8601. Accept both with and without fractional seconds.
+    decoder.dateDecodingStrategy = .custom { decoder in
+      let withFractional = ISO8601DateFormatter()
+      withFractional.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+      withFractional.timeZone = TimeZone(secondsFromGMT: 0)
+      let withoutFractional = ISO8601DateFormatter()
+      withoutFractional.formatOptions = [.withInternetDateTime]
+      withoutFractional.timeZone = TimeZone(secondsFromGMT: 0)
+
+      let container = try decoder.singleValueContainer()
+      let string = try container.decode(String.self)
+
+      if let date = withFractional.date(from: string) {
+        return date
+      }
+      if let date = withoutFractional.date(from: string) {
+        return date
+      }
+      throw DecodingError.dataCorruptedError(
+        in: container,
+        debugDescription:
+          "Expected date string to be ISO8601-formatted: \(string)"
+      )
+    }
     return decoder
   }()
 
@@ -100,7 +124,7 @@ public final class CursorAPI: Sendable, Service {
       break
     case .jsonEncoded(let data):
       request.headers.add(name: "Content-Type", value: "application/json")
-      request.body = .bytes(try jsonEncoder.encode(data))
+      request.body = .bytes(try Self.jsonEncoder.encode(data))
     }
 
     return try await httpClient.execute(request, timeout: configuration.timeout)
@@ -132,13 +156,13 @@ public final class CursorAPI: Sendable, Service {
 
     if response.status.code < 300 {
       do {
-        return try jsonDecoder.decode(Element.self, from: body)
+        return try Self.jsonDecoder.decode(Element.self, from: body)
       } catch {
         throw ResponseDecodingError(error: error, body: String(buffer: body))
       }
     }
 
-    if let remoteError = try? jsonDecoder.decode(RemoteError.self, from: body) {
+    if let remoteError = try? Self.jsonDecoder.decode(RemoteError.self, from: body) {
       throw remoteError
     }
     throw UnregonizedError(status: response.status, description: String(buffer: body))
