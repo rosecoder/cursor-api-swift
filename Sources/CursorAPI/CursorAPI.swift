@@ -7,7 +7,7 @@ import NIOSSL
 import ServiceLifecycle
 import Tracing
 
-public final class CursorAPI: Sendable, Service {
+public final class CursorAPI: CursorAPIProtocol, Service {
 
   private let httpClient = HTTPClient()
   private let configuration: Configuration

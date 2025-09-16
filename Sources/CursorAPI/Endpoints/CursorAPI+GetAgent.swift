@@ -2,7 +2,7 @@ import Foundation
 
 extension CursorAPI {
 
-  public func getAgent(id: Agent.ID, configuration: Configuration? = nil) async throws
+  public func getAgent(id: Agent.ID, configuration: Configuration?) async throws
     -> Agent
   {
     try await execute(

@@ -1,6 +1,6 @@
 extension CursorAPI {
 
-  public func getAPIKeyInfo(configuration: Configuration? = nil) async throws -> APIKeyInfo {
+  public func getAPIKeyInfo(configuration: Configuration?) async throws -> APIKeyInfo {
     try await execute(
       method: .GET,
       path: "/v0/me",

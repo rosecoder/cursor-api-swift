@@ -11,7 +11,11 @@ let package = Package(
     .library(
       name: "CursorAPI",
       targets: ["CursorAPI"]
-    )
+    ),
+    .library(
+      name: "CursorAPITesting",
+      targets: ["CursorAPITesting"]
+    ),
   ],
   dependencies: [
     .package(url: "https://github.com/apple/swift-distributed-tracing.git", from: "1.2.0"),
@@ -28,6 +32,10 @@ let package = Package(
         .product(name: "ServiceLifecycle", package: "swift-service-lifecycle"),
         .product(name: "Tracing", package: "swift-distributed-tracing"),
       ]
+    ),
+    .target(
+      name: "CursorAPITesting",
+      dependencies: ["CursorAPI"]
     ),
     .testTarget(
       name: "CursorAPITests",

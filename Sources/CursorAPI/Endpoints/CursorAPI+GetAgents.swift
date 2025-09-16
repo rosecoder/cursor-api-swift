@@ -4,8 +4,8 @@ extension CursorAPI {
 
   public func getAgents(
     limit: UInt = 20,
-    cursor: PaginationCursor? = nil,
-    configuration: Configuration? = nil
+    cursor: PaginationCursor?,
+    configuration: Configuration?
   ) async throws
     -> GetAgentsResult
   {

@@ -5,10 +5,10 @@ extension CursorAPI {
   public func createAgent(
     prompt: Prompt,
     source: Agent.Source,
-    model: Model? = nil,
-    target: CreateAgentTarget? = nil,
-    webhook: Webhook? = nil,
-    configuration: Configuration? = nil
+    model: Model?,
+    target: CreateAgentTarget?,
+    webhook: Webhook?,
+    configuration: Configuration?
   ) async throws
     -> Agent
   {

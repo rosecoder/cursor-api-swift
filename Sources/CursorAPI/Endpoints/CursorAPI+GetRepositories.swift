@@ -1,6 +1,6 @@
 extension CursorAPI {
 
-  public func getRepositories(configuration: Configuration? = nil) async throws -> [Repository] {
+  public func getRepositories(configuration: Configuration?) async throws -> [Repository] {
     let result: GetRepositoriesResult = try await execute(
       method: .GET,
       path: "/v0/repositories",
