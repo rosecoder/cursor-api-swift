@@ -4,7 +4,7 @@ extension CursorAPI {
 
   public func deleteAgent(
     id: Agent.ID,
-    configuration: Configuration? = nil
+    configuration: Configuration?
   ) async throws {
     let _: DeleteAgentResult = try await execute(
       method: .DELETE,
