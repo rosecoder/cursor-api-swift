@@ -33,6 +33,11 @@ extension Prompt.Image {
 
     public let width: UInt
     public let height: UInt
+
+    public init(width: UInt, height: UInt) {
+      self.width = width
+      self.height = height
+    }
   }
 }
 extension Prompt.Image.Dimension: Encodable {}
